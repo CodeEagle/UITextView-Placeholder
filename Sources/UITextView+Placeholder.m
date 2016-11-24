@@ -48,7 +48,10 @@
     }
     [self swizzledDealloc];
 }
-
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+}
 
 #pragma mark - Class Methods
 #pragma mark `defaultPlaceholderColor`
@@ -87,11 +90,12 @@
         NSAttributedString *originalText = self.attributedText;
         self.text = @" "; // lazily set font of `UITextView`.
         self.attributedText = originalText;
-
+        
         label = [[UILabel alloc] init];
         label.textColor = [self.class defaultPlaceholderColor];
         label.numberOfLines = 0;
         label.userInteractionEnabled = NO;
+        label.tag = 999;
         objc_setAssociatedObject(self, @selector(placeholderLabel), label, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 
         self.needsUpdateFont = YES;
@@ -131,6 +135,13 @@
     [self updatePlaceholderLabel];
 }
 
+- (bool)centerLizePlaceholder {
+    return self.placeholderLabel.tag == 999;
+}
+
+- (void)setCenterLizePlaceholder:(bool)centerLizePlaceholder {
+    self.placeholderLabel.tag = centerLizePlaceholder ? 999 : 1;
+}
 #pragma mark `placeholderColor`
 
 - (UIColor *)placeholderColor {
@@ -204,6 +215,9 @@
     CGFloat y = textContainerInset.top;
     CGFloat width = CGRectGetWidth(self.bounds) - x - lineFragmentPadding - textContainerInset.right;
     CGFloat height = [self.placeholderLabel sizeThatFits:CGSizeMake(width, 0)].height;
+    if (self.centerLizePlaceholder) {
+        y = (self.frame.size.height - height) / 2;
+    }
     self.placeholderLabel.frame = CGRectMake(x, y, width, height);
 }
 
