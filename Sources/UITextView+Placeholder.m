@@ -95,7 +95,7 @@
         label.textColor = [self.class defaultPlaceholderColor];
         label.numberOfLines = 0;
         label.userInteractionEnabled = NO;
-        label.tag = 999;
+        label.tag = 1;
         objc_setAssociatedObject(self, @selector(placeholderLabel), label, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 
         self.needsUpdateFont = YES;
